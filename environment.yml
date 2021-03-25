@@ -1,0 +1,20 @@
+name: urbansim_data
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8*
+  - flake8
+  - pyproj
+  - geopandas
+  - psycopg2
+  - geoalchemy2
+  - ipython
+  - tqdm
+  - xlrd
+  - python-dotenv
+  - click
+  - black
+  - pip
+  - pip:
+      - git+https://github.com/aaronfraint/pg-data-etl.git
+      - --editable .
