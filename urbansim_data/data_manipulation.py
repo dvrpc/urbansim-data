@@ -49,7 +49,7 @@ def projects_to_parcels(
             address,
             parcel_id,
             building_type,
-            start_year
+            start_year,
             residential_units,
             non_res_sqft
         from {project_table}
@@ -63,7 +63,7 @@ def projects_to_parcels(
         """
 
         year_filter_table_name = year_filter.replace(" ", "_")
-        for old_char, new_char in [("<", "lt"), (">", "gt"), ("<=", "lte"), (">=", "gte")]:
+        for old_char, new_char in [("<", "lt"), (">", "gt"), ("=", "e")]:
             if old_char in year_filter_table_name:
                 year_filter_table_name = year_filter_table_name.replace(old_char, new_char)
         new_project_table += f"_{year_filter_table_name}"
@@ -105,6 +105,10 @@ def projects_to_parcels(
                 where parcel_id = '{pid}'
             """
         db.execute_via_psycopg2(query)
+
+
+def aggregate_to_blocks(db: Database = _db):
+    pass
 
 
 if __name__ == "__main__":
