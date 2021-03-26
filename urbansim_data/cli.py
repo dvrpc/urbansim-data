@@ -2,6 +2,7 @@ import click
 
 from urbansim_data.data_import import import_data as _import_data
 from urbansim_data.data_manipulation import projects_to_parcels, _find_latest_project_table
+from urbansim_data.data_export import export_shp as _export_shp
 
 
 @click.group()
@@ -26,7 +27,14 @@ def assign_geom_to_projects(project_table, parcel_table, year_filter):
     )
 
 
-commands = [import_data, assign_geom_to_projects]
+@click.command()
+@click.argument("tablename")
+def export_shp(tablename):
+    """Export a spatial table from SQL to shapefile"""
+    _export_shp(tablename)
+
+
+commands = [import_data, assign_geom_to_projects, export_shp]
 
 for cmd in commands:
     main.add_command(cmd)
