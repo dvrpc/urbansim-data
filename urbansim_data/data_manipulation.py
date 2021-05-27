@@ -1,4 +1,4 @@
-from urbansim_data import _db
+from .db import _db
 from pg_data_etl import Database
 from tqdm import tqdm
 from typing import Union
@@ -18,9 +18,7 @@ def _find_latest_project_table(db: Database = _db) -> str:
         order by table_name desc limit 1
     """
 
-    project_table = db.query_via_psycopg2(query)
-
-    return project_table[0][0]
+    return db.query_as_singleton(query)
 
 
 def projects_to_parcels(
@@ -51,15 +49,24 @@ def projects_to_parcels(
             building_type,
             start_year,
             residential_units,
-            non_res_sqft
+            non_res_sqft,
+            tags,
+            duration
         from {project_table}
+        where
+            (tags like '%%NineCoDur%%'
+            or
+                tags like '%%bethel_concord%%'
+            or
+                tags like '%%Mercer_Affordable_Other%%'
+            )
     """
 
     # Add the year filter to the SQL code and the new table name
     if year_filter:
 
         projects_to_map_query += f"""
-            WHERE {year_filter}
+            AND {year_filter}
         """
 
         year_filter_table_name = year_filter.replace(" ", "_")
@@ -72,22 +79,21 @@ def projects_to_parcels(
     print(f"Applying parcel geometries to {new_project_table}")
 
     create_table_query = f"""
+    drop table if exists {new_project_table};
     create table {new_project_table} as (
         {projects_to_map_query}
     )
     """
-    db.execute_via_psycopg2(create_table_query)
+    print(create_table_query)
+    db.execute(create_table_query)
 
     # Add a 'geom' column to hold POINT data
-    db.execute_via_psycopg2(
-        f"select addgeometrycolumn('{new_project_table}', 'geom', 26918, 'POINT', 2)"
-    )
+    db.execute(f"select addgeometrycolumn('{new_project_table}', 'geom', 26918, 'POINT', 2)")
 
     # Loop over every project and assign an appropriate point location to the 'geom' column
-    parcel_ids = db.query_via_psycopg2(f"SELECT parcel_id FROM {new_project_table}")
-    pids = [pid[0] for pid in parcel_ids]
+    parcel_ids = db.query_as_list_of_singletons(f"SELECT parcel_id FROM {new_project_table}")
 
-    for pid in tqdm(pids, total=len(pids)):
+    for pid in tqdm(parcel_ids, total=len(parcel_ids)):
 
         if ";" not in pid:
             query = f"""
@@ -104,7 +110,8 @@ def projects_to_parcels(
                 )
                 where parcel_id = '{pid}'
             """
-        db.execute_via_psycopg2(query)
+
+        db.execute(query)
 
 
 def aggregate_to_blocks(db: Database = _db):
