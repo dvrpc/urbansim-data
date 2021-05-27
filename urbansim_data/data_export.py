@@ -1,5 +1,5 @@
 from pathlib import Path
-from urbansim_data import _db, GDRIVE_FOLDER
+from .db import _db, GDRIVE_FOLDER
 from pg_data_etl import Database
 
 
