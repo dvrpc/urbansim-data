@@ -47,7 +47,7 @@ Commands:
 
 ## Usage
 
-### Load a development table and/or shapefiles:
+### (1) Load a development table and/or shapefiles:
 
 ```bash
 ❯ urbansim import-data
@@ -55,13 +55,13 @@ Commands:
 
 `import-data` does not require any arguments. It reads CSV and shapefile data from the `Inputs` subfolder of the environment variable named "`GOOGLE_DRIVE_ROOT`".
 
-### Transform non-spatial development table into points:
+### (2) Transform non-spatial development table into points:
 
 ```bash
 ❯ urbansim assign-geom-to-projects
 ```
 
-`assign-geom-to-projects` does not require any arguments, but provides three optional arguments, as shown in the help text:
+`assign-geom-to-projects` does not require any arguments, but provides three optional ones, as shown in the help text:
 
 ```bash
 ❯ urbansim assign-geom-to-projects --help
@@ -90,7 +90,7 @@ Using these options, you could do something like this:
 ❯ urbansim assign-geom-to-projects --project-table my_project_table --parcel-table my_parcel_table --year-filter 'start_year >= 1995'
 ```
 
-### Export data from PostGIS to shapefile:
+### (3) Export data from PostGIS to shapefile:
 
 ```bash
 ❯ urbansim export-shp TABLENAME
