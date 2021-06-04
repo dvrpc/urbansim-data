@@ -16,5 +16,5 @@ dependencies:
   - black
   - pip
   - pip:
-      - git+https://github.com/aaronfraint/pg-data-etl.git
+      - pg-data-etl
       - --editable .
