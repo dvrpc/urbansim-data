@@ -87,7 +87,10 @@ Options:
 Using these options, you could do something like this:
 
 ```bash
-❯ urbansim assign-geom-to-projects --project-table my_project_table --parcel-table my_parcel_table --year-filter 'start_year >= 1995'
+❯ urbansim assign-geom-to-projects \
+    --project-table my_project_table \
+    --parcel-table my_parcel_table \
+    --year-filter 'start_year >= 1995'
 ```
 
 ### (3) Export data from PostGIS to shapefile:
