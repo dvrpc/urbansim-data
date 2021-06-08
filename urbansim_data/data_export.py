@@ -8,9 +8,9 @@ def export_shp(tablename: str, output_path: Path = GDRIVE_FOLDER, db: Database =
     Export a spatial table from SQL to a shapefile
     """
 
-    shp_output_path = output_path / "Outputs" / tablename
+    shp_output_path = output_path / "Outputs" / f"{tablename}.shp"
 
     print("-" * 80)
     print(f"Exporting {tablename} to {shp_output_path}")
 
-    db.export_gis(table_or_sql=tablename, filepath=shp_output_path)
+    db.export_gis(table_or_sql=tablename, filepath=shp_output_path, filetype="shp")
