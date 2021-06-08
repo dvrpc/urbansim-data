@@ -47,9 +47,14 @@ def assign_geom_to_projects(project_table, parcel_table, year_filter):
 
 @click.command()
 @click.argument("tablename")
-def export_shp(tablename):
+@click.option(
+    "--geoid/--no-geoid",
+    default=True,
+    help="Flag to include geographic IDs in output. Defaults to including them, using --geoid",
+)
+def export_shp(tablename, geoid):
     """Export a spatial table from SQL to shapefile"""
-    _export_shp(tablename)
+    _export_shp(tablename, include_geoids=geoid)
 
 
 commands = [import_data, assign_geom_to_projects, export_shp]
